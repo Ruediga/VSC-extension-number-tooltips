@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 					return null;
 				}
 
-				let binary = number.toString(2);
+				let binString = number.toString(2);
 				const bits = Math.ceil(Math.log2(number + 1));
 				let bitCount;
 				if (bits <= 8) {
@@ -75,21 +75,21 @@ export function activate(context: vscode.ExtensionContext) {
 					bitCount = 32;
 				}
 
-				binary = padStringLeft("0", binary, bitCount);
-				const binGroups = binary.match(/.{1,8}/g);
+				binString = padStringLeft("0", binString, bitCount);
+				const binGroups = binString.match(/.{1,8}/g);
 				if (!binGroups) {
 					outChannel.appendLine("hover: invalid binary format");
 					return null;
 				}
 
-				const binaryOutput = `**Bin:** \`${binGroups.join("'")}\`\n`;
+				const binary = `**Bin:** \`${binGroups.join("'")}\`\n`;
 				const hex = `**Hex:** \`${number.toString(16)}\`\n`;
 				const decimal = `**Dec:** \`${number}\`\n`;
-				const formats = [binaryOutput, hex, decimal].join('\n');
+				const formats = [binary, hex, decimal].join('\n');
 				const hoverString = new vscode.MarkdownString();
 				hoverString.appendMarkdown(`${formats}`);
 				hoverString.isTrusted = true;
-				outChannel.appendLine(`binary: <${binaryOutput}>, hexadecimal: <${hex}>, decimal: <${decimal}>`);
+				outChannel.appendLine(`binary: <${binary}>, hexadecimal: <${hex}>, decimal: <${decimal}>`);
 				return new vscode.Hover(hoverString);
 			}
 			outChannel.appendLine("hover: failed to match number string");
